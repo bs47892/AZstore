@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const Product = require("../models/product");
 
-//const upload = require("../middlewares/upload-photo");
-// POST request 
+const upload = require("../middlewares/upload-photo");
+// POST request - create a new product
 
 // title: String,
 //   description: String,
@@ -11,18 +11,18 @@ const Product = require("../models/product");
 //   stockQuantity: Number,
 //   rating: [Number]
 
-router.post("/products",/* upload.single("photo"),*/ async (req, res) => {
+router.post("/products", /*upload.single("photo"),*/ async (req, res) => {
   try {
     let product = new Product();
-    //product.ownerID = req.body.ownerID;
-   // product.categoryID = req.body.categoryID;
-    //product.price = req.body.price;
+    product.ownerID = req.body.ownerID;
+    product.categoryID = req.body.categoryID;
+    product.price = req.body.price;
     product.title = req.body.title;
     product.description = req.body.description;
     product.photo = req.file.location;
     product.stockQuantity = req.body.stockQuantity;
 
-    await product.save(); // funksionin async e thirrum me kete await
+    await product.save(); // async
 
     res.json({
       status: true,
@@ -35,14 +35,14 @@ router.post("/products",/* upload.single("photo"),*/ async (req, res) => {
     });
   }
 });
-/*
+
 // GET requesst - get all products
 router.get("/products", async (req, res) => {
   try {
     let products = await Product.find()
-      .populate("owner category")
-      .populate("reviews", "rating")
-      .exec();
+    //  .populate("owner category")
+     // .populate("reviews", "rating")
+     // .exec();
     res.json({
       success: true,
       products: products
@@ -59,9 +59,9 @@ router.get("/products", async (req, res) => {
 router.get("/products/:id", async (req, res) => {
   try {
     let product = await Product.findOne({ _id: req.params.id })
-      .populate("owner category")
-      .populate("reviews", "rating")
-      .exec();
+    //  .populate("owner category")
+    //  .populate("reviews", "rating")
+    //  .exec();
     res.json({
       success: true,
       product: product
@@ -75,7 +75,7 @@ router.get("/products/:id", async (req, res) => {
 });
 
 // PUT request - Update a single product
-router.put("/products/:id", upload.single("photo"), async (req, res) => {
+router.put("/products/:id", /*upload.single("photo"),*/ async (req, res) => {
   try {
     let product = await Product.findOneAndUpdate(
       { _id: req.params.id },
@@ -84,7 +84,7 @@ router.put("/products/:id", upload.single("photo"), async (req, res) => {
           title: req.body.title,
           price: req.body.price,
           category: req.body.categoryID,
-          photo: req.file.location,
+       //   photo: req.file.location,
           stockQuantity: req.body.stockQuantity,
           description: req.body.description,
           owner: req.body.ownerID
@@ -123,5 +123,5 @@ router.delete("/products/:id", async (req, res) => {
     });
   }
 });
-*/
+
 module.exports = router;
