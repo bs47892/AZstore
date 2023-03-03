@@ -1,3 +1,4 @@
+
 <template>
   <main>
     <div class="a-spacing-large"></div>
@@ -69,7 +70,7 @@
   </main>
 </template>
 
-<script>
+<script> 
 export default {
   // asyncData is fetching Data before nuxt page finished loading on the browser.
   // It is good for SEO because the data will be loaded first
@@ -83,4 +84,4 @@ export default {
     } catch (err) {}
   },
 }
-</script>
+</script> 

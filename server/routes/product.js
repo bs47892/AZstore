@@ -11,7 +11,7 @@ const upload = require("../middlewares/upload-photo");
 //   stockQuantity: Number,
 //   rating: [Number]
 
-router.post("/products", /*upload.single("photo"),*/ async (req, res) => {
+router.post("/products", upload.single("photo"), async (req, res) => {
   try {
     let product = new Product();
     product.ownerID = req.body.ownerID;
@@ -75,7 +75,7 @@ router.get("/products/:id", async (req, res) => {
 });
 
 // PUT request - Update a single product
-router.put("/products/:id", /*upload.single("photo"),*/ async (req, res) => {
+router.put("/products/:id", upload.single("photo"), async (req, res) => {
   try {
     let product = await Product.findOneAndUpdate(
       { _id: req.params.id },
@@ -84,7 +84,7 @@ router.put("/products/:id", /*upload.single("photo"),*/ async (req, res) => {
           title: req.body.title,
           price: req.body.price,
           category: req.body.categoryID,
-       //   photo: req.file.location,
+          photo: req.file.location,
           stockQuantity: req.body.stockQuantity,
           description: req.body.description,
           owner: req.body.ownerID
