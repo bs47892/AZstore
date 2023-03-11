@@ -12,8 +12,9 @@ module.exports = {
   plugins: [],
   // add your custom rules here
   rules: {
-    "prefer-const": false
+   // "prefer-const": false
+    'vue/script-setup-uses-vars': 'error',
+    "no-unused-vars": "off",
   },
 }
-
 

@@ -1,3 +1,4 @@
+
 <template>
     <main>
       <div class="container-fluid c-section">
@@ -38,6 +39,41 @@
   </template>
       
   <script>
+  import { $axios } from '@nuxtjs/axios';
+  export default {
+  async asyncData({ $axios }) {
+    try {
+      let response = await $axios.$get("http://localhost:3000/api/categories");
+      return {
+        categories: response.categories
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  data() {
+    return {
+      type: "",
+      categories: [] // define an empty array for categories
+    };
+  },
+  methods: {
+    async onAddCategory() {
+      try {
+        let data = { type: this.type };
+        let response = await this.$axios.$post(
+          "http://localhost:3000/api/categories",
+          data
+        );
+        this.categories.push(data);
+        console.log(this.categories);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+};
+  /*
   export default {
     async asyncData({ $axios }) {
       try {
@@ -70,4 +106,6 @@
       }
     }
   };
+  */
   </script>
+  

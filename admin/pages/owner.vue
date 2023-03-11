@@ -53,6 +53,43 @@
   </template>
       
   <script>
+   import { $axios } from '@nuxtjs/axios';
+  export default {
+  async asyncData({ $axios }) {
+    try {
+      let response = await $axios.$get("http://localhost:3000/api/owners");
+      return {
+        owners: response.owners
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  data() {
+    return {
+        name: "",
+        about: "",
+        selectedFile: null,
+        fileName: ""
+      };
+  },
+  methods: {
+    async onAddCategory() {
+      try {
+        let data = { type: this.type };
+        let response = await this.$axios.$post(
+          "http://localhost:3000/api/owners",
+          data
+        );
+        this.owners.push(data);
+        console.log(this.owners);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+};
+  /*
   export default {
     async asyncData({ $axios }) {
       try {
@@ -95,4 +132,5 @@
       }
     }
   };
+  */
   </script>

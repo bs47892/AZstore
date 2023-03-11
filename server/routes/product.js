@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const Product = require("../models/product");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
-const upload = require("../middlewares/upload-photo");
+
+//const upload = require("../middlewares/upload-photo");
 // POST request - create a new product
 
 // title: String,
@@ -14,12 +17,17 @@ const upload = require("../middlewares/upload-photo");
 router.post("/products", upload.single("photo"), async (req, res) => {
   try {
     let product = new Product();
+    const { filename, path } = req.file;
+
     product.ownerID = req.body.ownerID;
     product.categoryID = req.body.categoryID;
     product.price = req.body.price;
     product.title = req.body.title;
     product.description = req.body.description;
-    product.photo = req.file.location;
+    product.photo =  {
+      filename: filename,
+      path: path,
+    },
     product.stockQuantity = req.body.stockQuantity;
 
     await product.save(); // async
@@ -84,7 +92,7 @@ router.put("/products/:id", upload.single("photo"), async (req, res) => {
           title: req.body.title,
           price: req.body.price,
           category: req.body.categoryID,
-          photo: req.file.location,
+         photo: req.file.path,
           stockQuantity: req.body.stockQuantity,
           description: req.body.description,
           owner: req.body.ownerID
@@ -124,4 +132,49 @@ router.delete("/products/:id", async (req, res) => {
   }
 });
 
+module.exports = router; 
+
+
+/*
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+const fs = require('fs');
+
+const Product = require('../models/product');
+
+
+// Route to create a new product
+router.post("/", upload.single("photo"), async (req, res) => {
+  try {
+    // Get the uploaded file details from the request object
+    const { filename, path } = req.file;
+    
+    // Create a new product object with the uploaded file details
+    const product = new Product({
+      title: req.body.title,
+      price: req.body.price,
+      description: req.body.description,
+      ownerID: req.body.ownerID,
+      stockQuantity: req.body.stockQuantity,
+      categoryID: req.body.categoryID,
+      photo: {
+        filename: filename,
+        path: path,
+      },
+    });
+    
+    // Save the product to the database
+    await product.save();
+    
+    // Send a success response with the new product details
+    res.status(201).json({ success: true, product: product });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+});
 module.exports = router;
+*/
