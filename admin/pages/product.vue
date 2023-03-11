@@ -211,7 +211,7 @@
   data.append("ownerID", this.ownerID);
   data.append("stockQuantity", this.stockQuantity);
   data.append("categoryID", this.categoryID);
-  data.append("photo", new Blob([reader.result]));
+  data.append("photo", this.selectedFile);
 
   try {
     const response = await axios.post(

@@ -48,12 +48,14 @@ app.listen(3000, () => {
 });
 */
 
+
+const express = require('express');
 const multer = require("multer");
 
 // Define storage for the uploaded files
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // the directory where uploaded files will be stored
+    cb(null, "./uploads/"); // the directory where uploaded files will be stored
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname); // set a unique filename for the uploaded file
@@ -76,7 +78,7 @@ const fileFilter = function (req, file, cb) {
 // Create a multer instance with the storage and file filter options
 const upload = multer({
   storage: storage,
-  fileFilter: fileFilter,
+
 });
 
 module.exports = upload;

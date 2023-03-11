@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const Product = require("../models/product");
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 
 //const upload = require("../middlewares/upload-photo");
@@ -13,6 +12,25 @@ const upload = multer({ dest: 'uploads/' });
 //   price: Number,
 //   stockQuantity: Number,
 //   rating: [Number]
+const express = require('express');
+const path = require('path');
+
+
+// Define storage options for Multer middleware
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + Date.now() +
+     ext);
+  }
+});
+
+// Create Multer middleware instance
+const upload = multer({ storage: storage });
+
 
 router.post("/products", upload.single("photo"), async (req, res) => {
   try {
@@ -24,10 +42,7 @@ router.post("/products", upload.single("photo"), async (req, res) => {
     product.price = req.body.price;
     product.title = req.body.title;
     product.description = req.body.description;
-    product.photo =  {
-      filename: filename,
-      path: path,
-    },
+    product.photo = path,
     product.stockQuantity = req.body.stockQuantity;
 
     await product.save(); // async
