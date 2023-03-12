@@ -6,7 +6,7 @@
           <div class="col-sm-6">
             <div class="a-section">
               <div class="a-spacing-top-medium"></div>
-              <h2 style="text-align: center">Add a new Product</h2>
+              <h2 style="text-align: center">Update {{ product.title}}</h2>
               <form>
                 <!-- Category Dropdown -->
                 <div class="a-spacing-top-medium">
@@ -33,34 +33,47 @@
                 </div>
                 <!-- Title input -->
                 <div class="a-spacing-top-medium">
-                  <label>Title</label>
-                  <input type="text" class="a-input-text" style="width: 100%" v-model="title" />
+                  <label >Title</label>
+                  <input
+                    type="text"
+                    class="a-input-text"
+                    style="width: 100%"
+                    v-model="title"
+                    :placeholder="product.title"
+                  />
                 </div>
   
                 <!-- Price input -->
                 <div class="a-spacing-top-medium">
-                  <label >Price</label>
-                  <input type="number" class="a-input-text" style="width: 100%" v-model="price" />
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    class="a-input-text"
+                    style="width: 100%"
+                    v-model="price"
+                    :placeholder="product.price"
+                  />
                 </div>
   
                 <!-- StockQuantity input -->
                 <div class="a-spacing-top-medium">
-                  <label >Stock Quantity</label>
+                  <label ">Stock Quantity</label>
                   <input
                     type="number"
                     class="a-input-text"
                     style="width: 100%"
                     v-model="stockQuantity"
+                    :placeholder="product.stockQuantity"
                   />
                 </div>
   
                 <!-- Description textarea -->
                 <div class="a-spacing-top-medium">
-                  <label >Description</label>
+                  <label ">Description</label>
                   <textarea
-                    placeholder="Provide details such as a product description"
                     style="width: 100%"
                     v-model="description"
+                    :placeholder="product.description"
                   ></textarea>
                 </div>
   
@@ -70,7 +83,7 @@
                   <div class="a-row a-spacing-top-medium">
                     <label class="choosefile-button">
                       <i class="fal fa-plus"></i>
-                      <input type="file" name="photo" @change="onFileSelected" />
+                      <input type="file" @change="onFileSelected" />
                       <p style="margin-top: -70px">{{ fileName }}</p>
                     </label>
                   </div>
@@ -80,7 +93,7 @@
                 <div class="a-spacing-top-large">
                   <span class="a-button-register">
                     <span class="a-button-inner">
-                      <span class="a-button-text" @click="onAddProduct">Add product</span>
+                      <span class="a-button-text" @click="onUpdateProduct">Update product</span>
                     </span>
                   </span>
                 </div>
@@ -96,81 +109,20 @@
   
 <script>
 /*
-  import { $axios } from '@nuxtjs/axios';
-  export default {
-    
-    async asyncData({ $axios }) {
-      try {
-      //  let categories = $axios.$get("http://localhost:3000/api/categories");
-      //  let owners = $axios.$get("http://localhost:3000/api/owners");
-        const [catResponse, ownerResponse] = await Promise.all([
-       //   categories,
-       //   owners
-       $axios.$get("http://localhost:3000/api/categories"),
-        $axios.$get("http://localhost:3000/api/owners")
-      ]);
-       
-      //  console.log(catResponse);
-        return {
-          categories: catResponse.categories,
-          owners: ownerResponse.owners
-        };
-      } catch (err) {
-        console.log(err);
-      }
-    }, 
-    data() {
-      return {
-        categoryID: null,
-        ownerID: null,
-        title: "",
-        price: 0,
-        description: "",
-        selectedFile: null,
-        stockQuantity: 1,
-        fileName: "",
-        owners: [],
-        categories: []
-      };
-    },
-    
-    methods: {
-      onFileSelected(event) {
-        this.selectedFile = event.target.files[0];
-        console.log(this.selectedFile);
-        this.fileName = event.target.files[0].name;
-      },
-      async onAddProduct() {
-        let data = new FormData();
-        data.append("title", this.title);
-        data.append("price", this.price);
-        data.append("description", this.description);
-        data.append("ownerID", this.ownerID);
-        data.append("stockQuantity", this.stockQuantity);
-        data.append("categoryID", this.categoryID);
-        data.append("photo", this.selectedFile, this.selectedFile.name);
-        let result = await this.$axios.$post(
-          "http://localhost:3000/api/products",
-          data
-        );
-        this.$router.push("/");
-      }
-    }
-  };
-  */
- 
   import axios from 'axios';
   
   export default {
-    async asyncData() {
+    async asyncData($axios, params) {
       try {
-        const [catResponse, ownerResponse] = await Promise.all([
+        const [catResponse, ownerResponse, productResponse] = await Promise.all([
           axios.get("http://localhost:3000/api/categories"),
-          axios.get("http://localhost:3000/api/owners")
+          axios.get("http://localhost:3000/api/owners"),
+          axios.get("http://localhost:3000/api/products/${params.id}")
         ]);
         return {
           categories: catResponse.data.categories,
-          owners: ownerResponse.data.owners
+          owners: ownerResponse.data.owners,
+          productL: productResponse.product
         };
       } catch (err) {
         console.log(err);
@@ -181,10 +133,10 @@
         categoryID: null,
         ownerID: null,
         title: "",
-        price: 0,
+        price: "",
         description: "",
         selectedFile: null,
-        stockQuantity: 1,
+        stockQuantity: "",
         fileName: "",
         owners: [],
         categories: []
@@ -218,13 +170,71 @@
       "http://localhost:3000/api/products",
       data
     );
-    this.$router.push("/");
+    this.$router.push('/');
+   
   } catch (error) {
     console.log(error);
   }
 }
     }
   };
-  
+  */
+  export default {
+  async asyncData({ $axios, params }) {
+    try {
+      let categories = $axios.$get("http://localhost:3000/api/categories");
+      let owners = $axios.$get("http://localhost:3000/api/owners");
+      let product = $axios.$get(
+        `http://localhost:3000/api/products/${params.id}`
+      );
+      const [catResponse, ownerResponse, productResponse] = await Promise.all([
+        categories,
+        owners,
+        product
+      ]);
+      console.log(productResponse);
+      return {
+        categories: catResponse.categories,
+        owners: ownerResponse.owners,
+        product: productResponse.product
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  data() {
+    return {
+      categoryID: null,
+      ownerID: null,
+      title: "",
+      price: "",
+      description: "",
+      selectedFile: null,
+      stockQuantity: "",
+      fileName: ""
+    };
+  },
+  methods: {
+    onFileSelected(event) {
+      this.selectedFile = event.target.files[0];
+      console.log(this.selectedFile);
+      this.fileName = event.target.files[0].name;
+    },
+    async onUpdateProduct() {
+      let data = new FormData();
+      data.append("title", this.title);
+      data.append("price", this.price);
+      data.append("description", this.description);
+      data.append("ownerID", this.ownerID);
+      data.append("stockQuantity", this.stockQuantity);
+      data.append("categoryID", this.categoryID);
+      data.append("photo", this.selectedFile, this.selectedFile.name);
+      let result = await this.$axios.$put(
+        `http://localhost:3000/api/products/${this.$route.params.id}`,
+        data
+      );
+      this.$router.push("/");
+    }
+  }
+};
 </script>
-

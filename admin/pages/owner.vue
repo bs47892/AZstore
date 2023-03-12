@@ -25,7 +25,7 @@
                 <div class="a-row a-spacing-top-medium">
                   <label class="choosefile-button">
                     <i class="fal fa-plus"></i>
-                    <input type="file" @change="onFileSelected" />
+                    <input type="file" name="photo" @change="onFileSelected" />
                     <p style="margin-top: -70px">{{ fileName }}</p>
                   </label>
                 </div>
@@ -42,8 +42,8 @@
               </div>
             </form>
             <br />
-            <ul class="list-group">
-              <li v-for="owner in owners" :key="owner._id" class="list-group-item">{{ owner.name }}</li>
+            <ul class="list-group" v-if="owners">
+            <li v-for="owner in owners" :key="owner._id" class="list-group-item">{{ owner.name }}</li>
             </ul>
           </div>
           <div class="col-sm-3"></div>
@@ -74,19 +74,35 @@
       };
   },
   methods: {
-    async onAddCategory() {
-      try {
-        let data = { type: this.type };
-        let response = await this.$axios.$post(
-          "http://localhost:3000/api/owners",
-          data
-        );
-        this.owners.push(data);
-        console.log(this.owners);
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    onFileSelected(event) {
+        this.selectedFile = event.target.files[0];
+        console.log(this.selectedFile);
+        this.fileName = event.target.files[0].name;
+      },
+      async onAddOwner() {
+  const reader = new FileReader();
+  const onLoadPromise = new Promise((resolve) => {
+    reader.onload = () => resolve();
+  });
+  reader.readAsArrayBuffer(this.selectedFile);
+  await onLoadPromise;
+
+  const data = new FormData();
+  data.append("name", this.name);
+  data.append("about", this.about);
+  data.append("photo", this.selectedFile);
+
+  try {
+    let response = await this.$axios.$post(
+      "http://localhost:3000/api/owners",
+      data
+    );
+    this.owners.push(response.owner);
+    console.log(this.owners);
+  } catch (err) {
+    console.log(err);
+  }
+}
   }
 };
   /*

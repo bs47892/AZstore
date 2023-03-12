@@ -2,7 +2,24 @@ const router = require("express").Router();
 const Owner = require("../models/owner");
 //const upload = require("../middlewares/upload-photo");
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+const express = require('express');
+const path = require('path');
+
+// Define storage options for Multer middleware
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + Date.now() +
+     ext);
+  }
+});
+
+// Create Multer middleware instance
+const upload = multer({ storage: storage });
 
 // POST api
 router.post("/owners", upload.single("photo"), async (req, res) => {
@@ -11,7 +28,12 @@ router.post("/owners", upload.single("photo"), async (req, res) => {
     let owner = new Owner();
     owner.name = req.body.name;
     owner.about = req.body.about;
-    owner.photo = req.file.path;
+
+    if (req.file) {
+      const { filename, path } = req.file;
+      owner.photo = path;
+    }
+
     await owner.save();
 
     res.json({
@@ -33,6 +55,7 @@ router.get("/owners", async (req, res) => {
     let owners = await Owner.find();
 
     res.json({
+      success: true,
       owners: owners
     });
   } catch (err) {

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const OwnerSchema = new Schema({
   name: String,
   about: String,
-  photo: Buffer
+  photo: String
 });
 
 module.exports = mongoose.model("Owner", OwnerSchema);
