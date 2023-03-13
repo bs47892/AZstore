@@ -43,8 +43,12 @@
             </form>
             <br />
             <ul class="list-group" v-if="owners">
-            <li v-for="owner in owners" :key="owner._id" class="list-group-item">{{ owner.name }}</li>
-            </ul>
+  <li v-for="owner in owners" :key="owner._id" class="list-group-item">
+    {{ owner.name }}
+  </li>
+</ul>
+
+
           </div>
           <div class="col-sm-3"></div>
         </div>
@@ -66,13 +70,15 @@
     }
   },
   data() {
-    return {
-        name: "",
-        about: "",
-        selectedFile: null,
-        fileName: ""
-      };
-  },
+  return {
+    name: "",
+    about: "",
+    selectedFile: null,
+    fileName: "",
+    owners: [], // Initialize with an empty array
+  };
+},
+
   methods: {
     onFileSelected(event) {
         this.selectedFile = event.target.files[0];

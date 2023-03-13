@@ -64,8 +64,16 @@ router.get("/products", async (req, res) => {
   try {
     let products = await Product.find()
       .populate("owner category")
-     // .populate("reviews", "rating")
+     .populate("reviews", "rating")
       .exec();
+
+      let formattedProducts = products.map(product => {
+      product.photo = product.photo.replace(/\\/g, '/');
+        return {
+          ...product.toObject(),
+        };
+      });
+  
     res.json({
       success: true,
       products: products
@@ -81,13 +89,19 @@ router.get("/products", async (req, res) => {
 // GET request - get a single product
 router.get("/products/:id", async (req, res) => {
   try {
+  
     let product = await Product.findOne({_id: req.params.id})
      .populate("owner category")
-    //  .populate("reviews", "rating")
+    .populate("reviews", "rating")
       .exec();
+  
+      const imageUrl = req.protocol + '://' + req.get('host') + '/' + product.photo;
+     const imageUrlWithForwardSlashes = imageUrl.replace(/\\/g, '/');    
+     product.photo = imageUrlWithForwardSlashes;
+
     res.json({
-      success: true,
-      product: product
+     success: true,
+     product: product
     });
   } catch (err) {
     res.status(500).json({
@@ -96,15 +110,42 @@ router.get("/products/:id", async (req, res) => {
     });
   }
 });
-
+/*
+// GET route to retrieve a single product by ID
+router.get('/:id', async (req, res) => {
+  try {
+    let product = await Product.findOne({_id: req.params.id})
+     .populate("owner category")
+    .populate("reviews", "rating")
+      .exec();
+    if (!product) {
+      return res.status(404).send('Product not found');
+    }
+    // Build image URL based on filename
+    const imageUrl = req.protocol + '://' + req.get('host') + '/uploads/' + product.image;
+    // Send back product details, including image URL
+    res.send({
+      id: product._id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      imageUrl: imageUrl
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+}); */
 // PUT request - Update a single product
 router.put("/products/:id", upload.single("photo"), async (req, res) => {
   try {
+      const { filename, path } = req.file;
+
     let product = await Product.findOneAndUpdate(
       { _id: req.params.id },
       {
         $set: {
-          title: req.body.title,
+         title: req.body.title,
           price: req.body.price,
           category: req.body.categoryID,
          photo: path,

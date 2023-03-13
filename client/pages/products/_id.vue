@@ -7,7 +7,7 @@
           <ul class="a-unordered-list a-horizontal a-size-small">
             <li>
               <span class="a-list-item">
-                <a class="a-link-normal a-color-tertiary" href="#">{{product.category.type}}</a>
+                <a class="a-link-normal a-color-tertiary" href="#">{{ product.category.type}}</a>
               </span>
             </li>
             <li>
@@ -15,7 +15,7 @@
             </li>
             <li>
               <span class="a-list-item">
-                <a class="a-link-normal a-color-tertiary" href="#">{{product.title}}</a>
+                <a class="a-link-normal a-color-tertiary" href="#">{{ product.title }}</a>
               </span>
             </li>
           </ul>
@@ -51,7 +51,7 @@
                       <!-- Author's Name -->
                       <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-3">
                         <div class="authorNameCol">
-                          <a href="#">{{product.owner.name}}</a>
+                          <a href="#">{{ product.owner.name }}</a>
                         </div>
                       </div>
                       <!-- Author's Follow Button -->
@@ -77,7 +77,7 @@
                 <!-- Product Title -->
                 <div class="titleDiv">
                   <h1 class="productTitle">
-                    <span class="largeTitle">{{product.title}}</span>
+                    <span class="largeTitle">{{ product.title }}</span>
                     <span class="smallTitle">Paperback</span>
                   </h1>
                 </div>
@@ -85,7 +85,7 @@
                 <div class="bylineinfo">
                   by
                   <a href="#" class="authorName">
-                   {{product.owner.name}}
+                    {{ product.owner.name }}
                     <i
                       class="fas fa-chevron-down"
                       style="font-size: 8px !important; color: #555 !important;"
@@ -93,7 +93,6 @@
                   </a> (Author)
                 </div>
                 <div class="reviewGroup">
-                    <!--
                   <no-ssr>
                     <star-rating
                       :rating="product.averageRating"
@@ -105,7 +104,7 @@
                       :star-size="18"
                       :star-points="[23,2,14,17,0,19,10,34,7,50,23,43,38,50,36,34,46,19,31,17]"
                     ></star-rating>
-                  </no-ssr>-->
+                  </no-ssr>
                 </div>
                 <hr style="margin-top: 10px;" />
                 <!-- A tags Dummy Data -->
@@ -190,7 +189,7 @@
                 </div>
                 <!-- Description -->
                 <div class="bookDescription">
-                  <div class="bookDescriptionInner">{{product.description}}</div>
+                  <div class="bookDescriptionInner">{{ product.description }}</div>
                 </div>
   
                 <!-- Product specification -->
@@ -229,7 +228,7 @@
                       <div class="float-right">
                         <span
                           class="a-size-medium a-color-price offer-price a-text-normal"
-                        >$56</span>
+                        >${{ product.price }}</span>
                       </div>
                     </div>
                   </div>
@@ -285,7 +284,7 @@
                       <div class="a-section a-spacing-none">
                         <div class="a-section a-spacing-none a-spacing-top-mini">
                           This item shipts to
-                          <b>Kosova</b>
+                          <b>California</b>
                           <b>Get it by Monday, Sept 23 - Monday, Sept. 30</b>
                           Choose this date at checkout
                         </div>
@@ -297,7 +296,7 @@
                     <a href="#" class="a-link-normal">
                       <div class="a-row a-spacing-mini">
                         <i class="fal fa-map-market-alt"></i>
-                        <span class="a-size-small">Deliver to Kosova</span>
+                        <span class="a-size-small">Deliver to California</span>
                       </div>
                     </a>
                   </span>
@@ -364,26 +363,33 @@
       </div>
     </main>
   </template>
- 
   <script>
-
-export default {
-  
-  
-  async asyncData({ $axios, params }) {
-    try {
-      let response =await  $axios.$get(`/api/products/${params.id}`);
-      console.log(response);
-      
-   
-      return {
-        product: respone.product,
-       
-      };
-    } catch (err) {
-      console.log(err);
+  import { mapActions } from "vuex";
+  import StarRating from "vue-star-rating";
+  import ReviewSection from "~/components/ReviewSection";
+  export default {
+    components: {
+      ReviewSection,
+      StarRating
+    },
+    async asyncData({ $axios, params }) {
+      try {
+        let singleProduct = $axios.$get(`/api/products/${params.id}`);
+        let manyReviews = $axios.$get(`/api/reviews/${params.id}`);
+        const [productResponse, reviewsResponse] = await Promise.all([
+          singleProduct,
+          manyReviews
+        ]);
+        return {
+          product: productResponse.product,
+          reviews: reviewsResponse.reviews
+        };
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    methods: {
+      ...mapActions(["addProductToCart"])
     }
-  },
- 
-};
-</script>
+  };
+  </script>

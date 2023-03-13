@@ -34,13 +34,13 @@
                 <!-- Title input -->
                 <div class="a-spacing-top-medium">
                   <label >Title</label>
-                  <input
+              <input
                     type="text"
                     class="a-input-text"
                     style="width: 100%"
                     v-model="title"
                     :placeholder="product.title"
-                  />
+                  /> 
                 </div>
   
                 <!-- Price input -->
@@ -57,7 +57,7 @@
   
                 <!-- StockQuantity input -->
                 <div class="a-spacing-top-medium">
-                  <label ">Stock Quantity</label>
+                  <label >Stock Quantity</label>
                   <input
                     type="number"
                     class="a-input-text"
@@ -69,7 +69,7 @@
   
                 <!-- Description textarea -->
                 <div class="a-spacing-top-medium">
-                  <label ">Description</label>
+                  <label >Description</label>
                   <textarea
                     style="width: 100%"
                     v-model="description"
@@ -93,7 +93,7 @@
                 <div class="a-spacing-top-large">
                   <span class="a-button-register">
                     <span class="a-button-inner">
-                      <span class="a-button-text" @click="onUpdateProduct">Update product</span>
+                      <span class="a-button-text" @click="onUpdateProduct">Update Product</span>
                     </span>
                   </span>
                 </div>

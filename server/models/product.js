@@ -12,13 +12,13 @@ const ProductSchema = new Schema(
     price: Number,
     stockQuantity: Number,
     reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }]
-  //},
-  //{
-   // toObject: { virtuals: true },
-  //  toJSON: { virtuals: true }
+  },
+  {
+    toObject: { virtuals: true },
+   toJSON: { virtuals: true }
   }
 );
-/*
+
 ProductSchema.virtual("averageRating").get(function() {
   if (this.reviews.length > 0) {
     let sum = this.reviews.reduce((total, review) => {
@@ -47,5 +47,5 @@ Model.SyncToAlgolia();
 Model.SetAlgoliaSettings({
   searchableAttributes: ["title"]
 });
-*/
+
 module.exports = mongoose.model('Product', ProductSchema);

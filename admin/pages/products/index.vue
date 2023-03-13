@@ -188,6 +188,7 @@
         fileName: "",
         owners: [],
         categories: []
+       
       };
     },
     methods: {

@@ -85,6 +85,7 @@ export default {
       };
     } catch (err) {}
   },
+ 
   methods: {
     async onDeleteProduct(id, index) {
       try {
