@@ -94,12 +94,12 @@ router.get("/products/:id", async (req, res) => {
      .populate("owner category")
     .populate("reviews", "rating")
       .exec();
-  
+ 
       const imageUrl = req.protocol + '://' + req.get('host') + '/' + product.photo;
      const imageUrlWithForwardSlashes = imageUrl.replace(/\\/g, '/');    
      product.photo = imageUrlWithForwardSlashes;
-
-    res.json({
+     
+  res.json({
      success: true,
      product: product
     });
@@ -109,7 +109,8 @@ router.get("/products/:id", async (req, res) => {
       message: err.message
     });
   }
-});
+}); 
+
 /*
 // GET route to retrieve a single product by ID
 router.get('/:id', async (req, res) => {

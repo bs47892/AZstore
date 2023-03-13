@@ -30,7 +30,7 @@
                   <span
                     class="nav-line-2"
                     id="glow-ingress-line2"
-                  >Kosova</span>
+                  >Kosovo</span>
                 </div>
               </nuxt-link>
             </div>

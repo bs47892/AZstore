@@ -46,7 +46,7 @@
                         <div class="a-row a-spacing-small">
                           <span class="a-size-small a-color-secondary">by</span>
                           <span class="a-size-small a-color-secondary">
-                            <a class="a-link-normal a-text-normal" href="#">{{ product.owner.name }}</a>
+                            <a class="a-link-normal a-text-normal" href="#">{{ product.owner }}</a>
                           </span>
                         </div>
 
@@ -93,19 +93,7 @@
                           <!-- Ratings --->
                           <div class="col-sm-5">
                             <div class="a-row a-spacing-mini">
-                              <!-- Star Ratings --->
-                              <no-ssr>
-                                <star-rating
-                                  :rating="product.averageRating"
-                                  :show-rating="false"
-                                  :glow="1"
-                                  :border-width="1"
-                                  :rounded-corners="true"
-                                  :read-only="true"
-                                  :star-size="18"
-                                  :star-points="[23,2,14,17,0,19,10,34,7,50,23,43,38,50,36,34,46,19,31,17]"
-                                ></star-rating>
-                              </no-ssr>
+                             
                             </div>
                           </div>
                         </div>
@@ -122,12 +110,12 @@
   </main>
 </template>
 <script>
-import StarRating from "vue-star-rating";
+//import StarRating from "vue-star-rating";
 import FeaturedProduct from "~/components/FeaturedProduct";
 export default {
   components: {
     FeaturedProduct,
-    StarRating
+  //  StarRating
   },
   async asyncData({ $axios }) {
     try {

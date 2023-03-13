@@ -54,7 +54,7 @@
   data() {
     return {
       type: "",
-      categories: [] // define an empty array for categories
+      categories: []
     };
   },
   methods: {

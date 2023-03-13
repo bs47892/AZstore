@@ -358,19 +358,20 @@
             </div>
           </div>
   
-          <ReviewSection :product="product" :reviews="reviews" />
+       <!--  <ReviewSection :product="product" :reviews="reviews" />--> 
         </div>
       </div>
     </main>
   </template>
   <script>
   import { mapActions } from "vuex";
-  import StarRating from "vue-star-rating";
-  import ReviewSection from "~/components/ReviewSection";
+ // import StarRating from "vue-star-rating";
+  // import ReviewSection from "~/components/ReviewSection";
   export default {
     components: {
       ReviewSection,
-      StarRating
+      StarRating,
+     
     },
     async asyncData({ $axios, params }) {
       try {
